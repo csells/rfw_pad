@@ -1,3 +1,5 @@
 # rfw_pad
 
-A new Flutter project.
+Playing around with hosting [Remote Flutter Widgets](https://pub.dev/packages/rfw) are they're typed.
+
+![](README/screenshot01.png)
