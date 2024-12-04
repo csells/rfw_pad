@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "flutter_application_20",
+      "name": "rfw_pad",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "flutter_application_20 (profile mode)",
+      "name": "rfw_pad (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "flutter_application_20 (release mode)",
+      "name": "rfw_pad (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

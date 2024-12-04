@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/dart.dart';
 import 'package:re_highlight/styles/atom-one-light.dart';
+import 'package:rfw/formats.dart';
+import 'package:rfw/rfw.dart';
 import 'package:split_view/split_view.dart';
 
 void main() => runApp(const MainApp());
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           ),
           children: [
             CodeView(controller: _controller),
-            Text(_controller.value),
+            WidgetView(text: _controller.value),
           ],
         ),
       );
@@ -86,7 +88,7 @@ class _CodeViewState extends State<CodeView> {
   Widget build(BuildContext context) => CodeEditor(
         controller: _controller,
         onChanged: (value) => widget.controller.value =
-            value.codeLines.asString(TextLineBreak.crlf),
+            value.codeLines.asString(TextLineBreak.lf),
         style: CodeEditorStyle(
           codeTheme: CodeHighlightTheme(
             languages: {'json': CodeHighlightThemeMode(mode: langDart)},
@@ -106,6 +108,58 @@ class _CodeViewState extends State<CodeView> {
         scrollController: CodeScrollController(
           verticalScroller: ScrollController(),
           horizontalScroller: ScrollController(),
+        ),
+      );
+}
+
+class WidgetView extends StatefulWidget {
+  const WidgetView({
+    required this.text,
+    super.key,
+  });
+
+  final String text;
+
+  @override
+  State<WidgetView> createState() => _WidgetViewState();
+}
+
+class _WidgetViewState extends State<WidgetView> {
+  final coreName = const LibraryName(<String>['core', 'widgets']);
+  final mainName = const LibraryName(<String>['main']);
+  final _runtime = Runtime();
+  final _data = DynamicContent();
+  late RemoteWidgetLibrary _remoteWidgets;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _runtime.update(coreName, createCoreWidgets());
+    _data.update('greet', <String, Object>{'name': 'World'});
+
+    reset();
+  }
+
+  void reset() {
+    debugPrint('reset called');
+    _remoteWidgets = parseLibraryFile(widget.text);
+    _runtime.update(mainName, _remoteWidgets);
+  }
+
+  @override
+  void didUpdateWidget(covariant WidgetView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    reset();
+  }
+
+  @override
+  Widget build(BuildContext context) => RemoteWidget(
+        runtime: _runtime,
+        data: _data,
+        widget: FullyQualifiedWidgetName(mainName, 'root'),
+        onEvent: (name, arguments) => debugPrint(
+          'user triggered event "$name" with data: $arguments',
         ),
       );
 }

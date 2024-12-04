@@ -1,4 +1,4 @@
-name: flutter_application_20
+name: rfw_pad
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   re_editor: ^0.6.0
   re_highlight: ^0.0.3
+  rfw: ^1.0.30
   split_view: ^3.2.1
 
 dev_dependencies:
